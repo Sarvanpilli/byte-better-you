@@ -9,7 +9,8 @@ import {
   Heart, 
   Calendar, 
   DumbbellIcon, 
-  Trophy 
+  Trophy,
+  Settings
 } from "lucide-react";
 
 const Layout: React.FC = () => {
@@ -19,6 +20,9 @@ const Layout: React.FC = () => {
     return location.pathname === path;
   };
 
+  // Hide navbar on home page (first page)
+  const showNavbar = location.pathname !== "/";
+
   const navItems = [
     { name: "Home", path: "/", icon: Home },
     { name: "Profile", path: "/profile", icon: User },
@@ -26,6 +30,7 @@ const Layout: React.FC = () => {
     { name: "Workouts", path: "/workouts", icon: DumbbellIcon },
     { name: "Log", path: "/log", icon: Calendar },
     { name: "Results", path: "/results", icon: Trophy },
+    { name: "Settings", path: "/settings", icon: Settings },
   ];
 
   return (
@@ -45,28 +50,32 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 w-full border-t bg-background z-40">
-        <div className="container mx-auto flex justify-between items-center py-2">
-          {navItems.map((item) => (
-            <Link 
-              key={item.path} 
-              to={item.path}
-              className={cn(
-                "flex flex-col items-center p-2 rounded-md transition-colors",
-                isActive(item.path) 
-                  ? "text-primary" 
-                  : "text-muted-foreground hover:text-primary"
-              )}
-            >
-              <item.icon className="h-5 w-5" />
-              <span className="text-xs mt-1">{item.name}</span>
-            </Link>
-          ))}
-        </div>
-      </nav>
-      
-      {/* Add padding at the bottom to prevent content from being hidden behind the navbar */}
-      <div className="h-16"></div>
+      {showNavbar && (
+        <>
+          <nav className="fixed bottom-0 left-0 right-0 w-full border-t bg-background z-40">
+            <div className="container mx-auto flex justify-between items-center py-2">
+              {navItems.map((item) => (
+                <Link 
+                  key={item.path} 
+                  to={item.path}
+                  className={cn(
+                    "flex flex-col items-center p-2 rounded-md transition-colors",
+                    isActive(item.path) 
+                      ? "text-primary" 
+                      : "text-muted-foreground hover:text-primary"
+                  )}
+                >
+                  <item.icon className="h-5 w-5" />
+                  <span className="text-xs mt-1">{item.name}</span>
+                </Link>
+              ))}
+            </div>
+          </nav>
+          
+          {/* Add padding at the bottom when the navbar is shown */}
+          <div className="h-16"></div>
+        </>
+      )}
     </div>
   );
 };
